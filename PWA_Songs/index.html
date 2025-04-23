@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Albums PWA</title>
+  <!-- Link to the web app manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <!-- Favicon and icons for PWA -->
+  <link rel="icon" type="image/png" href="/icon-192x192.png">
+  <link rel="apple-touch-icon" href="/icon-192x192.png">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+  <header class="text-center mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">Music Albums</h1>
+    <p class="text-gray-600">Explore your favorite albums offline!</p>
+  </header>
+
+  <main id="album-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl w-full">
+    <!-- Albums will be dynamically inserted here -->
+  </main>
+
+  <footer class="mt-8 text-gray-500 text-center">
+    <p>&copy; 2025 Music Albums PWA. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Album data
+    const albums = [
+      {
+        name: "Midnight Vibes",
+        singer: "Luna Star",
+        songs: ["Moonlit Dance", "Starry Nights", "Echoes of Love"],
+        image: "/icon-300x300.png"
+      },
+      {
+        name: "Sunset Grooves",
+        singer: "Solar Beats",
+        songs: ["Golden Hour", "Chasing Sunsets", "Warm Breeze"],
+        image: "/icon-300x300.png"
+      },
+      {
+        name: "Echoes of the Past",
+        singer: "Nostalgia King",
+        songs: ["Old Memories", "Faded Pictures", "Timeless Tune"],
+        image: "/icon-300x300.png"
+      }
+    ];
+
+    // Function to render albums
+    function renderAlbums() {
+      const container = document.getElementById('album-container');
+      albums.forEach(album => {
+        const albumCard = `
+          <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center">
+            <img src="${album.image}" alt="${album.name}" class="w-full h-48 object-cover rounded-md mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">${album.name}</h2>
+            <p class="text-gray-600 mb-2">by ${album.singer}</p>
+            <ul class="text-gray-700 list-disc list-inside">
+              ${album.songs.map(song => `<li>${song}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+        container.innerHTML += albumCard;
+      });
+    }
+
+    // Render albums on page load
+    renderAlbums();
+
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(error => {
+            console.error('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
