@@ -1,0 +1,117 @@
+q2 book details 
+
+
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Book Form',
+      home: Scaffold(
+        body: Center(
+          child: BookForm(),
+        ),
+      ),
+    );
+  }
+}
+
+class BookForm extends StatefulWidget {
+  @override
+  _BookFormState createState() => _BookFormState();
+}
+
+class _BookFormState extends State<BookForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _bookNameController = TextEditingController();
+  final _authorController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _quantityController = TextEditingController();
+
+  Widget buildRow(String label, TextEditingController controller,
+      {List<TextInputFormatter>? inputFormatters,
+      TextInputType? keyboardType,
+      String? Function(String?)? validator}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              width: 100,
+              child: Text(label, style: TextStyle(fontSize: 16))),
+          SizedBox(
+            width: 200,
+            child: TextFormField(
+              controller: controller,
+              inputFormatters: inputFormatters,
+              keyboardType: keyboardType,
+              validator: validator,
+              decoration: InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 50),
+          Text("Book details", style: TextStyle(fontSize: 24)),
+          SizedBox(height: 20),
+          buildRow("Book Name", _bookNameController,
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ]'))],
+              validator: (value) => value == null || value.isEmpty ? 'Enter book name' : null),
+          buildRow("Author", _authorController,
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ]'))],
+              validator: (value) => value == null || value.isEmpty ? 'Enter author' : null),
+          buildRow("Price", _priceController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) {
+                if (value == null || value.isEmpty) return 'Enter price';
+                if (int.parse(value) < 0) return 'Price must be positive';
+                return null;
+              }),
+          buildRow("Quantity", _quantityController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) {
+                if (value == null || value.isEmpty) return 'Enter quantity';
+                if (int.parse(value) < 0) return 'Quantity must be positive';
+                return null;
+              }),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Book details submitted!')),
+                );
+              }
+            },
+            child: Text("Submit"),
+          )
+        ],
+      ),
+    );
+  }
+}

@@ -1,0 +1,155 @@
+q6 three screens 
+
+main.dart:
+import 'package:flutter/material.dart';
+import 'first_screen.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FirstScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+
+first_screen.dart:
+import 'package:flutter/material.dart';
+import 'second_screen.dart';
+
+class FirstScreen extends StatelessWidget {
+  final nameController = TextEditingController();
+  final mobileController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Step 1 - Basic Info')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(labelText: 'Enter Name'),
+            ),
+            TextField(
+              controller: mobileController,
+              decoration: InputDecoration(labelText: 'Enter Mobile Number'),
+              keyboardType: TextInputType.phone,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              child: Text('Next'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SecondScreen(
+                      name: nameController.text,
+                      mobile: mobileController.text,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+second_screen.dart:
+import 'package:flutter/material.dart';
+import 'third_screen.dart';
+
+class SecondScreen extends StatelessWidget {
+  final String name;
+  final String mobile;
+
+  final addressController = TextEditingController();
+  final cityController = TextEditingController();
+
+  SecondScreen({required this.name, required this.mobile});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Step 2 - Address Info')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: addressController,
+              decoration: InputDecoration(labelText: 'Enter Address'),
+            ),
+            TextField(
+              controller: cityController,
+              decoration: InputDecoration(labelText: 'Enter City'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              child: Text('Next'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ThirdScreen(
+                      name: name,
+                      mobile: mobile,
+                      address: addressController.text,
+                      city: cityController.text,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+third_screen.dart:
+import 'package:flutter/material.dart';
+
+class ThirdScreen extends StatelessWidget {
+  final String name, mobile, address, city;
+
+  ThirdScreen({
+    required this.name,
+    required this.mobile,
+    required this.address,
+    required this.city,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Step 3 - Summary')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Name: $name', style: TextStyle(fontSize: 18)),
+            Text('Mobile: $mobile', style: TextStyle(fontSize: 18)),
+            Text('Address: $address', style: TextStyle(fontSize: 18)),
+            Text('City: $city', style: TextStyle(fontSize: 18)),
+          ],
+        ),
+      ),
+    );
+  }
+}

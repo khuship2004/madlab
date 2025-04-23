@@ -1,0 +1,101 @@
+q3 book details 
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: BookDetailsForm(),
+    );
+  }
+}
+
+class BookDetailsForm extends StatefulWidget {
+  @override
+  _BookDetailsFormState createState() => _BookDetailsFormState();
+}
+
+class _BookDetailsFormState extends State<BookDetailsForm> {
+  String? _category = "TW";
+
+  final _nameController = TextEditingController();
+  final _subjectController = TextEditingController();
+  final _marksController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Book details")),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            buildTextField("Name", _nameController, FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))),
+            SizedBox(height: 10),
+            buildTextField("Subject", _subjectController, FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text("Category: "),
+                Radio(
+                  value: "TW",
+                  groupValue: _category,
+                  onChanged: (value) {
+                    setState(() {
+                      _category = value.toString();
+                    });
+                  },
+                ),
+                Text("TW"),
+                Radio(
+                  value: "IA",
+                  groupValue: _category,
+                  onChanged: (value) {
+                    setState(() {
+                      _category = value.toString();
+                    });
+                  },
+                ),
+                Text("IA"),
+                Radio(
+                  value: "Or",
+                  groupValue: _category,
+                  onChanged: (value) {
+                    setState(() {
+                      _category = value.toString();
+                    });
+                  },
+                ),
+                Text("Or"),
+              ],
+            ),
+            SizedBox(height: 10),
+            buildTextField("Marks", _marksController, FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$'))),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String label, TextEditingController controller, TextInputFormatter formatter) {
+    return Row(
+      children: [
+        SizedBox(width: 70, child: Text(label)),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            inputFormatters: [formatter],
+            decoration: InputDecoration(border: OutlineInputBorder()),
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -1,0 +1,105 @@
+q10 song list 
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(SongListApp());
+}
+
+class SongListApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: SongListScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class SongListScreen extends StatelessWidget {
+  final List<Map<String, String>> songs = [
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b2730b9f02c4f50102a2298e2c7e",
+      "name": "Blinding Lights",
+      "singer": "The Weeknd",
+      "category": "Pop"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b2734e575d55b9dba310e9c3e55f",
+      "name": "Shape of You",
+      "singer": "Ed Sheeran",
+      "category": "Pop"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b2732e69b9c3b7ef9c9db1e5a50e",
+      "name": "Believer",
+      "singer": "Imagine Dragons",
+      "category": "Rock"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b2731c4c2822e4f03063e5f7f1a6",
+      "name": "Dance Monkey",
+      "singer": "Tones And I",
+      "category": "Alternative"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b273e5ec9998d8a2073b1a8f9b08",
+      "name": "Levitating",
+      "singer": "Dua Lipa",
+      "category": "Pop"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b273267c30882b8807aa67188050",
+      "name": "Senorita",
+      "singer": "Shawn Mendes & Camila Cabello",
+      "category": "Latin Pop"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b27313d8a1f73c8c5e6f6606e53c",
+      "name": "Bad Guy",
+      "singer": "Billie Eilish",
+      "category": "Electropop"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b273d85c34cf965f46c6c0547f36",
+      "name": "Closer",
+      "singer": "The Chainsmokers ft. Halsey",
+      "category": "Electronic"
+    },
+    {
+      "image": "https://i.scdn.co/image/ab67616d0000b273cf457f8a368c4d934ce5a5e1",
+      "name": "Uptown Funk",
+      "singer": "Mark Ronson ft. Bruno Mars",
+      "category": "Funk"
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Song List'),
+      ),
+      body: ListView.builder(
+        itemCount: songs.length,
+        itemBuilder: (context, index) {
+          final song = songs[index];
+          return ListTile(
+            leading: Image.network(song['image']!, width: 60, height: 60),
+            title: Text(song['name']!),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Singer: ${song['singer']}'),
+                Text('Category: ${song['category']}'),
+              ],
+            ),
+            isThreeLine: true,
+          );
+        },
+      ),
+    );
+  }
+}
+
+

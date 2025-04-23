@@ -1,0 +1,89 @@
+q4 book details 
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(BookApp());
+}
+
+class BookApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: BookListPage(),
+    );
+  }
+}
+
+class BookListPage extends StatelessWidget {
+  final List<Map<String, String>> books = [
+    {
+      'name': 'Flutter Basics',
+      'author': 'Khushi Dev',
+      'price': '₹299',
+      'image': 'https://via.placeholder.com/100'
+    },
+    {
+      'name': 'Dart Deep Dive',
+      'author': 'Jane Doe',
+      'price': '₹399',
+      'image': 'https://via.placeholder.com/100'
+    },
+    {
+      'name': 'Mobile UI Design',
+      'author': 'John Smith',
+      'price': '₹499',
+      'image': 'https://via.placeholder.com/100'
+    },
+    {
+      'name': 'Backend for Apps',
+      'author': 'Ravi Kumar',
+      'price': '₹349',
+      'image': 'https://via.placeholder.com/100'
+    },
+    {
+      'name': 'Firebase with Flutter',
+      'author': 'Aisha Ali',
+      'price': '₹599',
+      'image': 'https://via.placeholder.com/100'
+    },
+    {
+      'name': 'Animations in Flutter',
+      'author': 'Tom Lee',
+      'price': '₹459',
+      'image': 'https://via.placeholder.com/100'
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Book details')),
+      body: ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Image.network(
+                  books[index]['image']!,
+                  width: 100,
+                  height: 100,
+                ),
+                SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Book Name: ${books[index]['name']}'),
+                    Text('Author: ${books[index]['author']}'),
+                    Text('Price: ${books[index]['price']}'),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

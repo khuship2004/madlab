@@ -1,0 +1,34 @@
+import 'dart:io';
+
+void main() {
+
+  stdout.write('Enter a long sentence: ');
+  String? sentence = stdin.readLineSync();
+
+  
+  if (sentence == null || sentence.trim().isEmpty) {
+    print('Error: Please enter a valid sentence.');
+    return;
+  }
+
+
+  printNumberOfCharacters(sentence);
+  printNumberOfWords(sentence);
+  printSentenceInReverse(sentence);
+}
+
+void printNumberOfCharacters(String sentence) {
+  int charCount = sentence.length;
+  print('Number of characters in the sentence: $charCount');
+}
+
+
+void printNumberOfWords(String sentence) {
+  int wordCount = sentence.trim().split(' ').where((word) => word.isNotEmpty).length;
+  print('Number of words in the sentence: $wordCount');
+}
+
+void printSentenceInReverse(String sentence) {
+  String reversedSentence = sentence.split('').reversed.join();
+  print('Sentence in reverse order: $reversedSentence');
+}

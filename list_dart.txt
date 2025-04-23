@@ -1,0 +1,54 @@
+void main() {
+  List<int> numbers = [10, 5, 8, 15, 3, 12];
+
+  if (numbers.isEmpty) {
+    print('Error: The list is empty.');
+    return;
+  }
+
+  
+  printTotal(numbers);
+  printHighest(numbers);
+  printLowest(numbers);
+  printAverage(numbers);
+  printMedian(numbers);
+}
+
+
+void printTotal(List<int> numbers) {
+  int total = numbers.reduce((a, b) => a + b);
+  print('Total of all numbers: $total');
+}
+
+
+void printHighest(List<int> numbers) {
+  int highest = numbers.reduce((a, b) => a > b ? a : b);
+  print('Highest number: $highest');
+}
+
+
+void printLowest(List<int> numbers) {
+  int lowest = numbers.reduce((a, b) => a < b ? a : b);
+  print('Lowest number: $lowest');
+}
+
+
+void printAverage(List<int> numbers) {
+  double average = numbers.reduce((a, b) => a + b) / numbers.length;
+  print('Average of all numbers: $average');
+}
+
+
+void printMedian(List<int> numbers) {
+  List<int> sortedNumbers = List.from(numbers)..sort();
+  double median;
+  int middleIndex = sortedNumbers.length ~/ 2;
+
+ 
+  if (sortedNumbers.length % 2 == 0) {
+    median = (sortedNumbers[middleIndex - 1] + sortedNumbers[middleIndex]) / 2.0;
+  } else {
+    median = sortedNumbers[middleIndex].toDouble();
+  }
+  print('Median of the numbers: $median');
+}

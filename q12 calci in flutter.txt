@@ -1,0 +1,120 @@
+q12 calci in flutter 
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(CalculatorApp());
+}
+
+class CalculatorApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CalculatorScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class CalculatorScreen extends StatefulWidget {
+  @override
+  _CalculatorScreenState createState() => _CalculatorScreenState();
+}
+
+class _CalculatorScreenState extends State<CalculatorScreen> {
+  String input = '';
+  String result = '';
+
+  void buttonPressed(String value) {
+    setState(() {
+      if (value == 'C') {
+        input = '';
+        result = '';
+      } else if (value == '=') {
+        try {
+          final expression = input.replaceAll('×', '*').replaceAll('÷', '/');
+          result = eval(expression).toString();
+        } catch (e) {
+          result = 'Error';
+        }
+      } else {
+        input += value;
+      }
+    });
+  }
+
+  double eval(String expression) {
+    List<String> tokens = expression.split(RegExp(r'(\+|\-|\*|\/)')).map((e) => e.trim()).toList();
+    RegExp operatorRegex = RegExp(r'[\+\-\*/]');
+    Iterable<Match> matches = operatorRegex.allMatches(expression);
+    List<String> operators = matches.map((m) => m.group(0)!).toList();
+
+    double total = double.parse(tokens[0]);
+    for (int i = 0; i < operators.length; i++) {
+      double next = double.parse(tokens[i + 1]);
+      switch (operators[i]) {
+        case '+':
+          total += next;
+          break;
+        case '-':
+          total -= next;
+          break;
+        case '*':
+          total *= next;
+          break;
+        case '/':
+          total /= next;
+          break;
+      }
+    }
+    return total;
+  }
+
+  Widget buildButton(String label) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: () => buttonPressed(label),
+        child: Text(label, style: TextStyle(fontSize: 24)),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Simple Calculator')),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              alignment: Alignment.bottomRight,
+              child: Text(
+                input,
+                style: TextStyle(fontSize: 32),
+              ),
+            ),
+          ),
+          Divider(),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              alignment: Alignment.topRight,
+              child: Text(
+                result,
+                style: TextStyle(fontSize: 32, color: Colors.blue),
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              Row(children: [buildButton('7'), buildButton('8'), buildButton('9'), buildButton('÷')]),
+              Row(children: [buildButton('4'), buildButton('5'), buildButton('6'), buildButton('×')]),
+              Row(children: [buildButton('1'), buildButton('2'), buildButton('3'), buildButton('-')]),
+              Row(children: [buildButton('0'), buildButton('C'), buildButton('='), buildButton('+')]),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
