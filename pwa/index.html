@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Kitab Ghar</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .book-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .book {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .book img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Online Kitab Ghar</h1>
+    <div class="book-container" id="bookContainer"></div>
+
+    <script>
+        const books = [
+            { name: "Book 1", author: "Author 1", price: "$10", image: "images/book1.jpg" },
+            { name: "Book 2", author: "Author 2", price: "$12", image: "images/book2.jpg" },
+            { name: "Book 3", author: "Author 3", price: "$15", image: "images/book3.jpg" },
+            { name: "Book 4", author: "Author 4", price: "$8", image: "images/book4.jpg" },
+            { name: "Book 5", author: "Author 5", price: "$20", image: "images/book5.jpg" },
+            { name: "Book 6", author: "Author 6", price: "$18", image: "images/book6.jpg" }
+        ];
+
+        const bookContainer = document.getElementById('bookContainer');
+        books.forEach(book => {
+            const bookDiv = document.createElement('div');
+            bookDiv.classList.add('book');
+            bookDiv.innerHTML = `
+                <img src="${book.image}" alt="${book.name}">
+                <h3>${book.name}</h3>
+                <p>Author: ${book.author}</p>
+                <p>Price: ${book.price}</p>
+            `;
+            bookContainer.appendChild(bookDiv);
+        });
+
+        // Register the service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(err => console.log('Service Worker Error:', err));
+        }
+    </script>
+</body>
+</html>
