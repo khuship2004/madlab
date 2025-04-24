@@ -1,0 +1,182 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Basic Navigation App',
+      debugShowCheckedModeBanner: false,
+      home: FirstScreen(),
+    );
+  }
+}
+
+class FirstScreen extends StatefulWidget {
+  @override
+  _FirstScreenState createState() => _FirstScreenState();
+}
+
+class _FirstScreenState extends State<FirstScreen> {
+  TextEditingController celsiusController = TextEditingController();
+  String result = '';
+
+  void convertToFahrenheit() {
+    double celsius = double.tryParse(celsiusController.text) ?? 0;
+    double fahrenheit = (celsius * 9 / 5) + 32;
+    setState(() {
+      result = '$fahrenheit °F';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Temperature Converter')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+            ListTile(
+              title: Text('Temperature Converter'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => FirstScreen()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Age Calculator'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SecondScreen()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: celsiusController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Enter Celsius'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: convertToFahrenheit,
+              child: Text('Convert to Fahrenheit'),
+            ),
+            SizedBox(height: 10),
+            Text(result, style: TextStyle(fontSize: 20)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatefulWidget {
+  @override
+  _SecondScreenState createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  DateTime? selectedDate;
+  String ageResult = '';
+
+  void pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2000),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        calculateAge();
+      });
+    }
+  }
+
+  void calculateAge() {
+    if (selectedDate == null) return;
+
+    DateTime today = DateTime.now();
+    int age = today.year - selectedDate!.year;
+    if (today.month < selectedDate!.month ||
+        (today.month == selectedDate!.month && today.day < selectedDate!.day)) {
+      age--;
+    }
+
+    ageResult = 'Age: $age years';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Age Calculator')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+            ListTile(
+              title: Text('Temperature Converter'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => FirstScreen()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Age Calculator'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SecondScreen()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: pickDate,
+              child: Text('Select Birth Date'),
+            ),
+            SizedBox(height: 10),
+            Text(
+              selectedDate == null ? '' : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 10),
+            Text(ageResult, style: TextStyle(fontSize: 20)),
+          ],
+        ),
+      ),
+    );
+  }
+}
