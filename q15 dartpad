@@ -1,0 +1,220 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FirstScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class FirstScreen extends StatefulWidget {
+  @override
+  _FirstScreenState createState() => _FirstScreenState();
+}
+
+class _FirstScreenState extends State<FirstScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final pinCodeController = TextEditingController();
+  DateTime? selectedDate;
+  String? gender;
+  String? selectedCity;
+  List<String> cities = ['Mumbai', 'Delhi', 'Chennai', 'Bangalore', 'Kolkata'];
+
+  void _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2000),
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() => selectedDate = picked);
+    }
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate() &&
+        gender != null &&
+        selectedDate != null &&
+        selectedCity != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SecondScreen(
+            name: nameController.text,
+            gender: gender!,
+            dob: selectedDate!,
+            address: addressController.text,
+            city: selectedCity!,
+            pinCode: pinCodeController.text,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Please complete all fields')));
+    }
+  }
+
+  Widget buildRow(String label, Widget field) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        children: [
+          SizedBox(
+              width: 100,
+              child: Text(label, style: TextStyle(fontSize: 16))),
+          Expanded(child: field),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Contact Details')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              buildRow(
+                "Name",
+                TextFormField(
+                  controller: nameController,
+                  validator: (val) => val!.isEmpty ? 'Enter name' : null,
+                ),
+              ),
+              buildRow(
+                "Gender",
+                Row(
+                  children: [
+                    Radio<String>(
+                      value: 'Male',
+                      groupValue: gender,
+                      onChanged: (val) => setState(() => gender = val),
+                    ),
+                    Text("Male"),
+                    SizedBox(width: 10),
+                    Radio<String>(
+                      value: 'Female',
+                      groupValue: gender,
+                      onChanged: (val) => setState(() => gender = val),
+                    ),
+                    Text("Female"),
+                  ],
+                ),
+              ),
+              buildRow(
+                "Date of birth",
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      onPressed: _pickDate,
+                    ),
+                    Text(selectedDate == null
+                        ? ''
+                        : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}"),
+                  ],
+                ),
+              ),
+              buildRow(
+                "Address",
+                TextFormField(
+                  controller: addressController,
+                  validator: (val) => val!.isEmpty ? 'Enter address' : null,
+                ),
+              ),
+              buildRow(
+                "City",
+                DropdownButtonFormField<String>(
+                  value: selectedCity,
+                  items: cities
+                      .map((city) =>
+                          DropdownMenuItem(value: city, child: Text(city)))
+                      .toList(),
+                  onChanged: (val) => setState(() => selectedCity = val),
+                  validator: (val) => val == null ? 'Select city' : null,
+                ),
+              ),
+              buildRow(
+                "Pin Code",
+                TextFormField(
+                  controller: pinCodeController,
+                  keyboardType: TextInputType.number,
+                  validator: (val) => val!.isEmpty ? 'Enter pin code' : null,
+                ),
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submitForm,
+                  child: Text("Submit"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  final String name;
+  final String gender;
+  final DateTime dob;
+  final String address;
+  final String city;
+  final String pinCode;
+
+  SecondScreen({
+    required this.name,
+    required this.gender,
+    required this.dob,
+    required this.address,
+    required this.city,
+    required this.pinCode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('All Details')),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Name: $name", style: TextStyle(fontSize: 18)),
+            Text("Gender: $gender", style: TextStyle(fontSize: 18)),
+            Text("DOB: ${dob.day}/${dob.month}/${dob.year}",
+                style: TextStyle(fontSize: 18)),
+            Text("Address: $address", style: TextStyle(fontSize: 18)),
+            Text("City: $city", style: TextStyle(fontSize: 18)),
+            Text("Pin Code: $pinCode", style: TextStyle(fontSize: 18)),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("BACK"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
